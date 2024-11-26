@@ -30,17 +30,18 @@ def game_over(screen: pg.Surface) -> None:
 
     pg.display.update()
     time.sleep(5)
-    """
+    
 def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
     bb_imgs = []
-    bb_accs = [a for a in range(1, 11)]
-   for r in range(1, 11):
+
+    for r in range(1, 11):
         bb_img = pg.Surface((20*r, 20*r))
         pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
         bb_imgs.append(bb_img)
         bb_img.set_colorkey((0, 0, 0))
+    bb_accs = [a for a in range(1, 11)]
     return bb_imgs, bb_accs
-    """
+    
 def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     """
     引数で与えられたrctが画面内か外かを判定
@@ -105,12 +106,11 @@ def main():
             vy *= -1
 
         bb_imgs, bb_accs = init_bb_imgs()
-        """
         avx = vx * bb_accs[min(tmr//500, 9)]
         avy = vy * bb_accs[min(tmr//500, 9)]
         bb_img = bb_imgs[min(tmr//500, 9)]
-        bb_rct.move_ip(vx, vy)
-        """
+        bb_rct.move_ip(avx/2, avy/2)
+        
         screen.blit(kk_img, kk_rct)
         screen.blit(bb_img,bb_rct)
         pg.display.update()
