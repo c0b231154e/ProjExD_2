@@ -2,6 +2,7 @@ import os
 import random
 import sys
 import pygame as pg
+import time
 
 
 WIDTH, HEIGHT = 1100, 650
@@ -14,6 +15,32 @@ DELTA = {
 }
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+def game_over(screen: pg.Surface) -> None:
+    black_img = pg.Surface((1100, 650), pg.SRCALPHA)
+    black_img.fill((0,0,0,128))
+    screen.blit(black_img,(0, 0))
+
+    fonto = pg.font.Font(None, 80)
+    txt = fonto.render("Game Over",True, (255, 255, 255))
+    screen.blit(txt, [400, 300])
+
+    cry_img = pg.image.load("fig/8.png")
+    screen.blit(cry_img, [350, 300]) 
+    screen.blit(cry_img, [710, 300])
+
+    pg.display.update()
+    time.sleep(5)
+    """
+def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
+    bb_imgs = []
+    bb_accs = [a for a in range(1, 11)]
+   for r in range(1, 11):
+        bb_img = pg.Surface((20*r, 20*r))
+        pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
+        bb_imgs.append(bb_img)
+        bb_img.set_colorkey((0, 0, 0))
+    return bb_imgs, bb_accs
+    """
 def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     """
     引数で与えられたrctが画面内か外かを判定
@@ -50,9 +77,12 @@ def main():
             if event.type == pg.QUIT: 
                 return
 
+        #ゲームオーバー        
         if kk_rct.colliderect(bb_rct):
-            print("ゲームオーバー")
+            game_over(screen)
+            pg.display.update()
             return
+            
         screen.blit(bg_img, [0, 0]) 
 
         key_lst = pg.key.get_pressed()
@@ -74,6 +104,13 @@ def main():
         if not tate:  # 縦にはみ出てる
             vy *= -1
 
+        bb_imgs, bb_accs = init_bb_imgs()
+        """
+        avx = vx * bb_accs[min(tmr//500, 9)]
+        avy = vy * bb_accs[min(tmr//500, 9)]
+        bb_img = bb_imgs[min(tmr//500, 9)]
+        bb_rct.move_ip(vx, vy)
+        """
         screen.blit(kk_img, kk_rct)
         screen.blit(bb_img,bb_rct)
         pg.display.update()
