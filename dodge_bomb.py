@@ -16,6 +16,7 @@ DELTA = {
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def game_over(screen: pg.Surface) -> None:
+
     black_img = pg.Surface((1100, 650), pg.SRCALPHA)
     black_img.fill((0,0,0,128))
     screen.blit(black_img,(0, 0))
