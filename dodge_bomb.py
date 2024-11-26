@@ -12,9 +12,20 @@ DELTA = {
     pg.K_LEFT:(-5, 0),
     pg.K_RIGHT:(5, 0),
 }
-
-
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
+    """
+    引数で与えられたrctが画面内か外かを判定
+    引数はこうかとんか爆弾のrect
+    画面内:true、画面外:false
+    """
+    yoko, tate = True, True
+    if rct.left < 0 or rct.right > WIDTH:
+        yoko = False
+    if rct.top < 0 or rct.bottom > HEIGHT:
+        tate = False
+    return yoko, tate
 
 
 def main():
@@ -32,7 +43,6 @@ def main():
     bb_rct.center = random.randint(0, WIDTH), random.randint(0, HEIGHT)
     vx,vy = +5,+5 #爆弾の速度ベクトル
 
-
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -48,9 +58,18 @@ def main():
             if key_lst[key]:
                 sum_mv[0] += tpl[0]
                 sum_mv[1] += tpl[1]
-
         kk_rct.move_ip(sum_mv)
+
+        if check_bound(kk_rct) != (True,True):
+            kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
+
         bb_rct.move_ip(vx,vy)
+        yoko, tate = check_bound(bb_rct)
+        if not yoko:  # 横にはみ出てる
+            vx *= -1
+        if not tate:  # 縦にはみ出てる
+            vy *= -1
+
         screen.blit(kk_img, kk_rct)
         screen.blit(bb_img,bb_rct)
         pg.display.update()
